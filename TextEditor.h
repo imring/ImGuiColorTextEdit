@@ -230,8 +230,8 @@ public:
 	inline void SetShowWhitespaces(bool aValue) { mShowWhitespaces = aValue; }
 	inline bool IsShowingWhitespaces() const { return mShowWhitespaces; }
 
-    bool IsLineNumberEnabled() const { return mLineNumberEnabled; }
-    void SetLineNumberEnable(bool aValue) { mLineNumberEnabled = aValue; }
+	bool IsLineNumberEnabled() const { return mLineNumberEnabled; }
+	void SetLineNumberEnable(bool aValue) { mLineNumberEnabled = aValue; }
 
 	void SetTabSize(int aValue);
 	inline int GetTabSize() const { return mTabSize; }
@@ -374,7 +374,7 @@ private:
 	bool mHandleMouseInputs;
 	bool mIgnoreImGuiChild;
 	bool mShowWhitespaces;
-    bool mLineNumberEnabled;
+	bool mLineNumberEnabled;
 
 	Palette mPaletteBase;
 	Palette mPalette;
