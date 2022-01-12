@@ -47,6 +47,7 @@ TextEditor::TextEditor()
 	, mHandleMouseInputs(true)
 	, mIgnoreImGuiChild(false)
 	, mShowWhitespaces(true)
+    , mLineNumberEnabled(true)
 	, mStartTime(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count())
 {
 	SetPalette(GetDarkPalette());
@@ -885,10 +886,13 @@ void TextEditor::Render()
 	auto globalLineMax = (int)mLines.size();
 	auto lineMax = std::max(0, std::min((int)mLines.size() - 1, lineNo + (int)floor((scrollY + contentSize.y) / mCharAdvance.y)));
 
-	// Deduce mTextStart by evaluating mLines size (global lineMax) plus two spaces as text width
-	char buf[16];
-	snprintf(buf, 16, " %d ", globalLineMax);
-	mTextStart = ImGui::GetFont()->CalcTextSizeA(ImGui::GetFontSize(), FLT_MAX, -1.0f, buf, nullptr, nullptr).x + mLeftMargin;
+    mTextStart = mLeftMargin;
+    if (IsLineNumberEnabled()) {
+        // Deduce mTextStart by evaluating mLines size (global lineMax) plus two spaces as text width
+        char buf[16];
+        snprintf(buf, 16, " %d ", globalLineMax);
+        mTextStart += ImGui::GetFont()->CalcTextSizeA(ImGui::GetFontSize(), FLT_MAX, -1.0f, buf, nullptr, nullptr).x;
+    }
 
 	if (!mLines.empty())
 	{
@@ -955,11 +959,13 @@ void TextEditor::Render()
 				}
 			}
 
-			// Draw line number (right aligned)
-			snprintf(buf, 16, "%d  ", lineNo + 1);
+            if (IsLineNumberEnabled()) {
+                // Draw line number (right aligned)
+                snprintf(buf, 16, "%d  ", lineNo + 1);
 
-			auto lineNoWidth = ImGui::GetFont()->CalcTextSizeA(ImGui::GetFontSize(), FLT_MAX, -1.0f, buf, nullptr, nullptr).x;
-			drawList->AddText(ImVec2(lineStartScreenPos.x + mTextStart - lineNoWidth, lineStartScreenPos.y), mPalette[(int)PaletteIndex::LineNumber], buf);
+                auto lineNoWidth = ImGui::GetFont()->CalcTextSizeA(ImGui::GetFontSize(), FLT_MAX, -1.0f, buf, nullptr, nullptr).x;
+                drawList->AddText(ImVec2(lineStartScreenPos.x + mTextStart - lineNoWidth, lineStartScreenPos.y), mPalette[(int)PaletteIndex::LineNumber], buf);
+            }
 
 			if (mState.mCursorPosition.mLine == lineNo)
 			{
