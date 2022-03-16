@@ -886,13 +886,13 @@ void TextEditor::Render()
 	auto globalLineMax = (int)mLines.size();
 	auto lineMax = std::max(0, std::min((int)mLines.size() - 1, lineNo + (int)floor((scrollY + contentSize.y) / mCharAdvance.y)));
 
-    mTextStart = mLeftMargin;
-	if (IsLineNumberEnabled()) {
-		// Deduce mTextStart by evaluating mLines size (global lineMax) plus two spaces as text width
-		char buf[16];
-		snprintf(buf, 16, " %d ", globalLineMax);
-		mTextStart += ImGui::GetFont()->CalcTextSizeA(ImGui::GetFontSize(), FLT_MAX, -1.0f, buf, nullptr, nullptr).x;
-	}
+    char buf[16];
+    mTextStart = (float)mLeftMargin;
+    if (IsLineNumberEnabled()) {
+        // Deduce mTextStart by evaluating mLines size (global lineMax) plus two spaces as text width
+        snprintf(buf, 16, " %d ", globalLineMax);
+        mTextStart += ImGui::GetFont()->CalcTextSizeA(ImGui::GetFontSize(), FLT_MAX, -1.0f, buf, nullptr, nullptr).x;
+    }
 
 	if (!mLines.empty())
 	{
